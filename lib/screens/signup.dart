@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,6 +22,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _nameController = TextEditingController();
+  final _homeAddressController = TextEditingController();
 
   @override
   void dispose() {
@@ -28,6 +30,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     _nameController.dispose();
+    _homeAddressController.dispose();
   }
 
   @override
@@ -57,6 +60,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   textEditingController: _nameController,
                 ),
                 CustomTextInputField(
+                  label: 'Home Address',
+                  textEditingController: _homeAddressController,
+                ),
+                CustomTextInputField(
                   label: 'Email',
                   textEditingController: _emailController,
                 ),
@@ -73,10 +80,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         _emailController.text,
                         _passwordController.text,
                       );
+                      User? user = FirebaseAuth.instance.currentUser;
                       await Custom_storage(
                         name: _nameController.text,
                         email: _emailController.text,
-                      ).registerNewUser();
+                        address: _homeAddressController.text,
+                      ).registerNewUser(user!.uid.toString());
 
                       if (signUpCondition == 'success') {
                         Get.off(() => const HomeScreen());

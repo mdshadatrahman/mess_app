@@ -1,8 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:mess_app/screens/home.dart';
-import 'package:mess_app/screens/login.dart';
-
 class Auth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
