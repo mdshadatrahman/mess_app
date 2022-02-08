@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1070269444560",
+    "project_id": "messmanagement-fbe86",
+    "storage_bucket": "messmanagement-fbe86.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1070269444560:android:167398ccda1eb54131c9d5",
+        "android_client_info": {
+          "package_name": "com.example.mess_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1070269444560-l7sam8s39baitbfkf3il40uea32apmc6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCO48E92ibiuKXkjzpNqAxw9ZeWbUVIang"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1070269444560-l7sam8s39baitbfkf3il40uea32apmc6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
