@@ -6,6 +6,7 @@ import 'package:mess_app/Utilities/constants.dart';
 import 'package:mess_app/screens/all_meal.dart';
 import 'package:mess_app/screens/login.dart';
 import 'package:mess_app/screens/my_meal.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -17,6 +18,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _page = 0;
   late PageController pageController;
+  bool isSpinning = false;
 
   @override
   void initState() {
@@ -42,59 +44,68 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('The Unknown'),
-        backgroundColor: Constants().primaryColor,
-        actions: [
-          InkWell(
-            onTap: () {
-              print('Logged out');
-            },
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: InkWell(
-                  child: const Text('Log out'),
-                  onTap: () async {
-                    await Auth().logout();
-                    Get.off(
-                      () => const LoginScreen(),
-                    );
-                  },
+    return ModalProgressHUD(
+      inAsyncCall: isSpinning,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('The Unknown'),
+          backgroundColor: Constants().primaryColor,
+          actions: [
+            InkWell(
+              onTap: () {
+                print('Logged out');
+              },
+              child: InkWell(
+                onTap: () async {
+                  setState(() {
+                    isSpinning = true;
+                  });
+                  await Auth().logout();
+                  setState(() {
+                    isSpinning = false;
+                  });
+                  Get.off(
+                    () => const LoginScreen(),
+                  );
+                },
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: const Text('Log out'),
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
-      ),
-      body: PageView(
-        controller: pageController,
-        onPageChanged: onPageChanged,
-        children: const [
-          MyMeal(),
-          AllMeal(),
-        ],
-      ),
-      bottomNavigationBar: CupertinoTabBar(
-        onTap: navigationTapped,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.add,
-              color: _page == 0 ? Colors.blue : Colors.grey,
+          ],
+        ),
+        body: PageView(
+          controller: pageController,
+          onPageChanged: onPageChanged,
+          children: const [
+            MyMeal(),
+            AllMeal(),
+          ],
+        ),
+        bottomNavigationBar: CupertinoTabBar(
+          onTap: navigationTapped,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.add,
+                color: _page == 0 ? Colors.blue : Colors.grey,
+              ),
+              backgroundColor: Colors.green,
             ),
-            backgroundColor: Colors.green,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.food_bank_outlined,
-              color: _page == 1 ? Colors.blue : Colors.grey,
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.food_bank_outlined,
+                color: _page == 1 ? Colors.blue : Colors.grey,
+              ),
+              label: '',
+              backgroundColor: Colors.green,
             ),
-            label: '',
-            backgroundColor: Colors.green,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

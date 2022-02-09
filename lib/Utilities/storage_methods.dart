@@ -6,32 +6,41 @@ class Custom_storage {
   final String name;
   final String email;
   final String address;
-  Custom_storage({required this.name, required this.email, required this.address});
 
-  // final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  Custom_storage(
+      {required this.name, required this.email, required this.address});
+
   CollectionReference users = FirebaseFirestore.instance.collection('users');
   CollectionReference meals = FirebaseFirestore.instance.collection('meal');
 
-  // FirebaseAuth current = FirebaseAuth.instance;
-
-
   Future<void> registerNewUser(String currentUser) async {
-    try{
-      await users.doc(currentUser).set({ //need to add userUID
+    try {
+      await users.doc(currentUser).set({
         'name': name,
-        'email' : email,
+        'email': email,
         'address': address,
       });
-    } catch(e){
+    } catch (e) {
       print(e);
     }
   }
-  Future<void> mealCounter(String currentUser) async{
-    try{
-      await meals.add({
-        'name': currentUser,
+
+  Future<void> mealCounter(
+      {required String uid,
+      required String currentUserName,
+      required String dayMeal,
+      required String nightMeal,
+      required String guestDayMeal,
+      required String guestNightMeal}) async {
+    try {
+      await meals.doc(uid).set({
+        'name': currentUserName,
+        'day_meal': dayMeal,
+        'night_meal': nightMeal,
+        'guest_day_meal': guestDayMeal,
+        'guest_night_meal': guestNightMeal,
       });
-    } catch (e){
+    } catch (e) {
       print(e);
     }
   }
