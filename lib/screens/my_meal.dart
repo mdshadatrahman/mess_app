@@ -1,5 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:mess_app/Utilities/constants.dart';
 
 class MyMeal extends StatefulWidget {
@@ -10,36 +11,15 @@ class MyMeal extends StatefulWidget {
 }
 
 class _MyMealState extends State<MyMeal> {
-  getCurrentDate() {
-    return DateFormat('dd-MM-yyyy')
-        .format(DateTime.now().add(const Duration(days: 1)));
-  }
+  // getCurrentDate() {
+  //   return DateFormat('dd-MM-yyyy')
+  //       .format(DateTime.now().add(const Duration(days: 1)));
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              const Text(
-                'Date: ',
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                getCurrentDate(),
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-              ),
-            ],
-          ),
-        ),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Container(
@@ -81,9 +61,15 @@ class _MyMealState extends State<MyMeal> {
   }
 }
 
-class CurrentData extends StatelessWidget {
+//TODO: Working on this
+class CurrentData extends StatefulWidget {
   const CurrentData({Key? key}) : super(key: key);
 
+  @override
+  State<CurrentData> createState() => _CurrentDataState();
+}
+
+class _CurrentDataState extends State<CurrentData> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -113,8 +99,8 @@ class CurrentData extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
-                      children: const [
-                        Text(
+                      children: [
+                        const Text(
                           'Day',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -123,6 +109,7 @@ class CurrentData extends StatelessWidget {
                         ),
                         Text(
                           '0',
+                          //working here .......................................
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 40,
@@ -256,3 +243,26 @@ class DayNightTile extends StatelessWidget {
     );
   }
 }
+
+//
+// Padding(
+// padding: const EdgeInsets.all(8.0),
+// child: Row(
+// children: [
+// const Text(
+// 'Date: ',
+// style: TextStyle(
+// fontSize: 25,
+// fontWeight: FontWeight.bold,
+// ),
+// ),
+// Text(
+// getCurrentDate(),
+// style: const TextStyle(
+// fontWeight: FontWeight.bold,
+// fontSize: 20,
+// ),
+// ),
+// ],
+// ),
+// ),

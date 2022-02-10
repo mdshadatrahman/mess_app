@@ -68,10 +68,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     () => const LoginScreen(),
                   );
                 },
-                child: Center(
+                child: const Center(
                   child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: const Text('Log out'),
+                    padding: EdgeInsets.all(12.0),
+                    child: Text('Log out'),
                   ),
                 ),
               ),
