@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mess_app/Utilities/auth.dart';
@@ -53,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: [
             InkWell(
               onTap: () {
-                print('Logged out');
+                // print('Logged out');
               },
               child: InkWell(
                 onTap: () async {
@@ -81,31 +80,31 @@ class _HomeScreenState extends State<HomeScreen> {
         body: PageView(
           controller: pageController,
           onPageChanged: onPageChanged,
-          children: const [
-            MyMeal(),
-            AllMeal(),
+          children: [
+            const MyMeal(),
+            getAllMealCount(),
           ],
         ),
-        bottomNavigationBar: CupertinoTabBar(
-          onTap: navigationTapped,
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.add,
-                color: _page == 0 ? Colors.blue : Colors.grey,
-              ),
-              backgroundColor: Colors.green,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.food_bank_outlined,
-                color: _page == 1 ? Colors.blue : Colors.grey,
-              ),
-              label: '',
-              backgroundColor: Colors.green,
-            ),
-          ],
-        ),
+        // bottomNavigationBar: CupertinoTabBar(
+        //   onTap: navigationTapped,
+        //   items: [
+        //     BottomNavigationBarItem(
+        //       icon: Icon(
+        //         Icons.add,
+        //         color: _page == 0 ? Colors.blue : Colors.grey,
+        //       ),
+        //       backgroundColor: Colors.green,
+        //     ),
+        //     BottomNavigationBarItem(
+        //       icon: Icon(
+        //         Icons.food_bank_outlined,
+        //         color: _page == 1 ? Colors.blue : Colors.grey,
+        //       ),
+        //       label: '',
+        //       backgroundColor: Colors.green,
+        //     ),
+        //   ],
+        // ),
       ),
     );
   }

@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mess_app/Utilities/constants.dart';
 
+import '../Utilities/storage_methods.dart';
+
 class MyMeal extends StatefulWidget {
   const MyMeal({Key? key}) : super(key: key);
 
@@ -11,13 +13,20 @@ class MyMeal extends StatefulWidget {
 }
 
 class _MyMealState extends State<MyMeal> {
-  // getCurrentDate() {
-  //   return DateFormat('dd-MM-yyyy')
-  //       .format(DateTime.now().add(const Duration(days: 1)));
-  // }
+  final _dayMealController = TextEditingController();
+  final _nightMealController = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _nightMealController.dispose();
+    _dayMealController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final _firestore = FirebaseFirestore.instance;
+    final _auth = FirebaseAuth.instance;
     return Column(
       children: [
         Padding(
@@ -32,22 +41,44 @@ class _MyMealState extends State<MyMeal> {
             child: Column(
               children: [
                 Row(
-                  children: const [
+                  children: [
                     DayNightTile(
+                      controller: _dayMealController,
                       dayTime: 'Day',
                     ),
                     DayNightTile(
+                      controller: _nightMealController,
                       dayTime: 'Night',
                     ),
                   ],
                 ),
                 Row(
-                  children: const [
-                    CustomButton(
-                      buttonText: 'Edit',
-                    ),
+                  children: [
                     CustomButton(
                       buttonText: 'Confirm',
+                      onPressed: () async {
+                        if (_dayMealController.text != '') {
+                          await _firestore
+                              .collection('meal')
+                              .doc(_auth.currentUser!.uid)
+                              .update({
+                            'day_meal': _dayMealController.text,
+                            'night_meal': _nightMealController.text,
+                          });
+                          _dayMealController.clear();
+                          _nightMealController.clear();
+                        } else {
+                          await _firestore
+                              .collection('meal')
+                              .doc(_auth.currentUser!.uid)
+                              .update({
+                            'day_meal': '0',
+                            'night_meal': '0',
+                          });
+                          _dayMealController.clear();
+                          _nightMealController.clear();
+                        }
+                      },
                     ),
                   ],
                 ),
@@ -70,6 +101,9 @@ class CurrentData extends StatefulWidget {
 }
 
 class _CurrentDataState extends State<CurrentData> {
+  final _firestore = FirebaseFirestore.instance;
+  final _auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -77,7 +111,7 @@ class _CurrentDataState extends State<CurrentData> {
         Container(
           padding: const EdgeInsets.only(top: 20),
           child: const Text(
-            'Current State:',
+            'Current Meal:',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 30,
@@ -107,14 +141,7 @@ class _CurrentDataState extends State<CurrentData> {
                             fontSize: 30,
                           ),
                         ),
-                        Text(
-                          '0',
-                          //working here .......................................
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 40,
-                          ),
-                        ),
+                        getMealCount(mealTime: 'day_meal'),
                       ],
                     ),
                   ),
@@ -123,21 +150,15 @@ class _CurrentDataState extends State<CurrentData> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
-                      children: const [
-                        Text(
+                      children: [
+                        const Text(
                           'Night',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 30,
                           ),
                         ),
-                        Text(
-                          '0',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 40,
-                          ),
-                        ),
+                        getMealCount(mealTime: 'night_meal'),
                       ],
                     ),
                   ),
@@ -152,8 +173,13 @@ class _CurrentDataState extends State<CurrentData> {
 }
 
 class CustomButton extends StatelessWidget {
-  const CustomButton({Key? key, required this.buttonText}) : super(key: key);
+  CustomButton({
+    Key? key,
+    required this.buttonText,
+    this.onPressed,
+  }) : super(key: key);
   final String buttonText;
+  VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -161,7 +187,7 @@ class CustomButton extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: TextButton(
-          onPressed: () {},
+          onPressed: onPressed,
           child: Text(
             buttonText,
             style: const TextStyle(
@@ -178,36 +204,25 @@ class CustomButton extends StatelessWidget {
 }
 
 class DayNightTile extends StatelessWidget {
-  const DayNightTile({Key? key, required this.dayTime}) : super(key: key);
+  DayNightTile({Key? key, required this.dayTime, required this.controller})
+      : super(key: key);
 
   final String dayTime;
+  TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Column(
         children: [
-          ListTile(
-            leading: Text(
-              dayTime,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
-            ),
-            trailing: Checkbox(
-              onChanged: (_) {},
-              value: false,
-            ),
-          ),
           Row(
             children: [
-              const Expanded(
+              Expanded(
                 child: Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'Guest',
-                    style: TextStyle(
+                    dayTime,
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
                     ),
@@ -218,6 +233,7 @@ class DayNightTile extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextField(
+                    controller: controller,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
