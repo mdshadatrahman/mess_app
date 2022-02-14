@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -39,69 +41,73 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         body: SafeArea(
           child: Container(
-            color: Colors.blue.shade100,
+            color: Constants().secondaryColor,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'LOG IN',
-                    style: GoogleFonts.openSansCondensed(
-                      fontSize: 50,
-                      fontWeight: FontWeight.bold,
-                      color: Constants().primaryColor,
-                    ),
-                  ),
-                  CustomTextInputField(
-                    label: 'Email',
-                    textEditingController: _emailController,
-                  ),
-                  CustomTextInputField(
-                    label: 'Password',
-                    textEditingController: _passwordController,
-                    isObscure: true,
-                  ),
-                  CustomTextButton(
-                    buttonText: 'LOG IN',
-                    onPressed: () async {
-                      setState(() {
-                        isSpinning = true;
-                      });
-                      try {
-                        String loginCondition = await Auth().loginUser(
-                          _emailController.text,
-                          _passwordController.text,
-                        );
-                        if (loginCondition == 'success') {
-                          Get.off(() => const HomeScreen());
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(loginCondition),
-                            ),
+              child: Center(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'LOG IN',
+                        style: GoogleFonts.openSansCondensed(
+                          fontSize: 50,
+                          fontWeight: FontWeight.bold,
+                          color: Constants().primaryColor,
+                        ),
+                      ),
+                      CustomTextInputField(
+                        label: 'Email',
+                        textEditingController: _emailController,
+                      ),
+                      CustomTextInputField(
+                        label: 'Password',
+                        textEditingController: _passwordController,
+                        isObscure: true,
+                      ),
+                      CustomTextButton(
+                        buttonText: 'LOG IN',
+                        onPressed: () async {
+                          setState(() {
+                            isSpinning = true;
+                          });
+                          try {
+                            String loginCondition = await Auth().loginUser(
+                              _emailController.text,
+                              _passwordController.text,
+                            );
+                            if (loginCondition == 'success') {
+                              Get.off(() => const HomeScreen());
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(loginCondition),
+                                ),
+                              );
+                            }
+                          } catch (e) {
+                            log(e.toString());
+                          }
+                          _emailController.clear();
+                          _passwordController.clear();
+                          setState(() {
+                            isSpinning = false;
+                          });
+                        },
+                      ),
+                      LoginSignupToogle(
+                        text: 'Not a user yet?',
+                        buttonText: 'REGISTER',
+                        onTap: () {
+                          Get.off(
+                            () => const SignUpScreen(),
                           );
-                        }
-                      } catch (e) {
-                        print(e);
-                      }
-                      _emailController.clear();
-                      _passwordController.clear();
-                      setState(() {
-                        isSpinning = false;
-                      });
-                    },
+                        },
+                      ),
+                    ],
                   ),
-                  LoginSignupToogle(
-                    text: 'Not a user yet?',
-                    buttonText: 'REGISTER',
-                    onTap: () {
-                      Get.off(
-                        () => const SignUpScreen(),
-                      );
-                    },
-                  ),
-                ],
+                ),
               ),
             ),
           ),

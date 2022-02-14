@@ -47,99 +47,103 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
         body: SafeArea(
           child: Container(
-            color: Colors.blue.shade100,
+            color: Constants().secondaryColor,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'REGISTER',
-                    style: GoogleFonts.openSansCondensed(
-                      fontSize: 50,
-                      fontWeight: FontWeight.bold,
-                      color: Constants().primaryColor,
-                    ),
-                  ),
-                  CustomTextInputField(
-                    label: 'Name',
-                    textEditingController: _nameController,
-                  ),
-                  CustomTextInputField(
-                    label: 'Home Address',
-                    textEditingController: _homeAddressController,
-                  ),
-                  CustomTextInputField(
-                    label: 'Email',
-                    textEditingController: _emailController,
-                  ),
-                  CustomTextInputField(
-                    label: 'Password',
-                    textEditingController: _passwordController,
-                    isObscure: true,
-                  ),
-                  CustomTextButton(
-                    buttonText: 'CREATE ACCOUNT',
-                    onPressed: () async {
-                      setState(() {
-                        isSpinning = true;
-                      });
-                      try {
-                        String signUpCondition = await Auth().registerUser(
-                          _emailController.text,
-                          _passwordController.text,
-                        );
-                        User? user = FirebaseAuth.instance.currentUser;
-                        FirebaseFirestore _storage = FirebaseFirestore.instance;
-                        await Custom_storage(
-                          name: _nameController.text,
-                          email: _emailController.text,
-                          address: _homeAddressController.text,
-                        ).registerNewUser(user!.uid);
-                        await Custom_storage(
-                          name: _nameController.text,
-                          email: _emailController.text,
-                          address: _homeAddressController.text,
-                        ).mealCounter(
-                          uid: user.uid,
-                          currentUserName: _nameController.text,
-                          dayMeal: '0',
-                          guestDayMeal: '0',
-                          guestNightMeal: '0',
-                          nightMeal: '0',
-                        );
+              child: Center(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'REGISTER',
+                        style: GoogleFonts.openSansCondensed(
+                          fontSize: 50,
+                          fontWeight: FontWeight.bold,
+                          color: Constants().primaryColor,
+                        ),
+                      ),
+                      CustomTextInputField(
+                        label: 'Name',
+                        textEditingController: _nameController,
+                      ),
+                      CustomTextInputField(
+                        label: 'Home Address',
+                        textEditingController: _homeAddressController,
+                      ),
+                      CustomTextInputField(
+                        label: 'Email',
+                        textEditingController: _emailController,
+                      ),
+                      CustomTextInputField(
+                        label: 'Password',
+                        textEditingController: _passwordController,
+                        isObscure: true,
+                      ),
+                      CustomTextButton(
+                        buttonText: 'CREATE ACCOUNT',
+                        onPressed: () async {
+                          setState(() {
+                            isSpinning = true;
+                          });
+                          try {
+                            String signUpCondition = await Auth().registerUser(
+                              _emailController.text,
+                              _passwordController.text,
+                            );
+                            User? user = FirebaseAuth.instance.currentUser;
+                            FirebaseFirestore _storage = FirebaseFirestore.instance;
+                            await Custom_storage(
+                              name: _nameController.text,
+                              email: _emailController.text,
+                              address: _homeAddressController.text,
+                            ).registerNewUser(user!.uid);
+                            await Custom_storage(
+                              name: _nameController.text,
+                              email: _emailController.text,
+                              address: _homeAddressController.text,
+                            ).mealCounter(
+                              uid: user.uid,
+                              currentUserName: _nameController.text,
+                              dayMeal: '0',
+                              guestDayMeal: '0',
+                              guestNightMeal: '0',
+                              nightMeal: '0',
+                            );
 
-                        if (signUpCondition == 'success') {
-                          Get.off(() => const HomeScreen());
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(signUpCondition),
-                            ),
+                            if (signUpCondition == 'success') {
+                              Get.off(() => const HomeScreen());
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(signUpCondition),
+                                ),
+                              );
+                            }
+                          } catch (e) {
+                            print(e);
+                          }
+                          _emailController.clear();
+                          _passwordController.clear();
+                          _nameController.clear();
+                          _homeAddressController.clear();
+                          setState(() {
+                            isSpinning = false;
+                          });
+                        },
+                      ),
+                      LoginSignupToogle(
+                        text: 'Already have an account?',
+                        buttonText: 'LOG IN',
+                        onTap: () {
+                          Get.off(
+                            () => const LoginScreen(),
                           );
-                        }
-                      } catch (e) {
-                        print(e);
-                      }
-                      _emailController.clear();
-                      _passwordController.clear();
-                      _nameController.clear();
-                      _homeAddressController.clear();
-                      setState(() {
-                        isSpinning = false;
-                      });
-                    },
+                        },
+                      ),
+                    ],
                   ),
-                  LoginSignupToogle(
-                    text: 'Already have an account?',
-                    buttonText: 'LOG IN',
-                    onTap: () {
-                      Get.off(
-                        () => const LoginScreen(),
-                      );
-                    },
-                  ),
-                ],
+                ),
               ),
             ),
           ),

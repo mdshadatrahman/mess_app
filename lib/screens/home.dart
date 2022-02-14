@@ -47,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
       inAsyncCall: isSpinning,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('The Unknown'),
+          title: Text(Constants().appName),
           backgroundColor: Constants().primaryColor,
           actions: [
             InkWell(
@@ -77,13 +77,16 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        body: PageView(
-          controller: pageController,
-          onPageChanged: onPageChanged,
-          children: [
-            const MyMeal(),
-            getAllMealCount(),
-          ],
+        body: Container(
+          color: Constants().secondaryColor,
+          child: PageView(
+            controller: pageController,
+            onPageChanged: onPageChanged,
+            children: [
+              const MyMeal(),
+              getAllMealCount(),
+            ],
+          ),
         ),
         // bottomNavigationBar: CupertinoTabBar(
         //   onTap: navigationTapped,

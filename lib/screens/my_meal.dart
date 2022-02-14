@@ -28,6 +28,7 @@ class _MyMealState extends State<MyMeal> {
     final _firestore = FirebaseFirestore.instance;
     final _auth = FirebaseAuth.instance;
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
